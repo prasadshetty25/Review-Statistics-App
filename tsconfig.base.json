@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@reviews-monorepo/auth": ["libs/auth/index.ts"],
+      "@reviews-monorepo/common": ["libs/common/index.ts"],
+      "@reviews-monorepo/config": ["libs/config/index.ts"],
+      "@reviews-monorepo/database": ["libs/database/index.ts"],
+      "@reviews-monorepo/logging": ["libs/logging/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
