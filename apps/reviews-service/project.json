@@ -62,6 +62,14 @@
           "buildTarget": "reviews-service:build:production"
         }
       }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/reviews-service"],
+      "options": {
+        "jestConfig": "apps/reviews-service/jest.config.js",
+        "passWithNoTests": true
+      }
     }
   }
 }

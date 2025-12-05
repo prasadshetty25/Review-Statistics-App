@@ -8,7 +8,7 @@ import { RegisterDto } from './dto/register.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
 
 export interface JwtPayload {
-  sub: string;
+  sub: string; // JWT spec requires string, but represents user id (number)
   username: string;
   email: string;
   permissions: string[];
@@ -85,7 +85,12 @@ export class AuthService {
   async validateToken(token: string): Promise<any> {
     try {
       const payload = this.jwtService.verify(token);
-      const user = await this.usersService.findById(payload.sub);
+      // Convert string sub to number for database query
+      const userId = parseInt(payload.sub, 10);
+      if (isNaN(userId)) {
+        throw new UnauthorizedException('Invalid user ID in token');
+      }
+      const user = await this.usersService.findById(userId);
 
       if (!user) {
         throw new UnauthorizedException('User not found');
@@ -113,7 +118,7 @@ export class AuthService {
    */
   private async generateTokenResponse(user: any): Promise<TokenResponseDto> {
     const payload: JwtPayload = {
-      sub: user.id,
+      sub: String(user.id), // JWT spec requires string, convert number to string
       username: user.username,
       email: user.email,
       permissions: user.permissions,

@@ -16,7 +16,7 @@ export class ReviewsService {
   ) {}
 
   async createReview(
-    userId: string,
+    userId: number,
     createReviewDto: CreateReviewDto
   ): Promise<ReviewResponseDto> {
     try {
@@ -81,7 +81,7 @@ export class ReviewsService {
     }
   }
 
-  async getLatestComments(limit: number = 10): Promise<ReviewResponseDto[]> {
+  async getLatestComments(limit = 10): Promise<ReviewResponseDto[]> {
     try {
       this.logger.log(`Fetching latest ${limit} comments`);
 

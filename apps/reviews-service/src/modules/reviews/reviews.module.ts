@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReviewsController } from './reviews.controller';
 import { ReviewsService } from './reviews.service';
-import { Log, Review } from '@reviews-monorepo/database';
+import { Log, Review, User } from '@reviews-monorepo/database';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Review,Log], 'databaseConnection'),
+    TypeOrmModule.forFeature([Review, Log, User], 'databaseConnection'),
   ],
   controllers: [ReviewsController],
   providers: [ReviewsService],

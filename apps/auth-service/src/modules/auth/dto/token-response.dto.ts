@@ -3,7 +3,7 @@ export class TokenResponseDto {
   token_type: string = 'Bearer';
   expires_in!: number;
   user!: {
-    id: string;
+    id: number;
     username: string;
     email: string;
     permissions: string[];

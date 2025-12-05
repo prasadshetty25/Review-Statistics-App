@@ -23,7 +23,7 @@ export class UsersService {
   /**
    * Find user by ID
    */
-  async findById(id: string): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
   }
 
@@ -44,7 +44,7 @@ export class UsersService {
   /**
    * Update last login timestamp
    */
-  async updateLastLogin(userId: string): Promise<void> {
+  async updateLastLogin(userId: number): Promise<void> {
     await this.usersRepository.update(userId, {
       lastLoginAt: new Date(),
     });
@@ -53,7 +53,7 @@ export class UsersService {
   /**
    * Update user permissions
    */
-  async updatePermissions(userId: string, permissions: string[]): Promise<User> {
+  async updatePermissions(userId: number, permissions: string[]): Promise<User> {
     await this.usersRepository.update(userId, { permissions });
     const user = await this.findById(userId);
     if (!user) {

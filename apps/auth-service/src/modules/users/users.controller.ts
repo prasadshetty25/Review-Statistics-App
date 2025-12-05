@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Body, Logger } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Body, Logger, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdatePermissionsDto } from './dto/update-permissions.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -24,10 +24,10 @@ export class UsersController {
    * GET /users/:id
    */
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UserResponseDto | null> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto | null> {
     this.logger.log(`Fetching user: ${id}`);
     const user = await this.usersService.findById(id);
-    
+
     if (!user) {
       return null;
     }
@@ -43,12 +43,12 @@ export class UsersController {
    */
   @Patch(':id/permissions')
   async updatePermissions(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updatePermissionsDto: UpdatePermissionsDto
   ): Promise<UserResponseDto> {
     this.logger.log(`Updating permissions for user: ${id}`);
     const user = await this.usersService.updatePermissions(id, updatePermissionsDto.permissions);
-    
+
     // Remove sensitive data
     const { passwordHash, ...userResponse } = user;
     return userResponse as UserResponseDto;

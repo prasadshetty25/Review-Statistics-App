@@ -198,6 +198,57 @@ npm run docker:logs:reviews-service
 - `npm run start:reviews-service` - Start reviews service (production)
 - `npm run start:auth` - Start auth service (production)
 
+### Testing
+- `npm run test:reviews-service` - Run all tests for reviews service
+- `npm run test:reviews-service:watch` - Run tests in watch mode
+- `npm run test:reviews-service:coverage` - Run tests with coverage report
+
+## 🧪 Testing
+
+The reviews-service includes comprehensive Jest test suites for both the service and controller layers.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm run test:reviews-service
+
+# Run tests in watch mode (re-runs on file changes)
+npm run test:reviews-service:watch
+
+# Run tests with coverage report
+npm run test:reviews-service:coverage
+```
+
+### Test Structure
+
+Tests are organized in a separate `__tests__` folder within each module:
+
+```
+apps/reviews-service/src/modules/reviews/
+├── __tests__/
+│   ├── reviews.controller.spec.ts
+│   └── reviews.service.spec.ts
+├── reviews.controller.ts
+├── reviews.service.ts
+└── ...
+```
+
+### Test Coverage
+
+The test suite includes:
+- **Service Tests**: Unit tests for `ReviewsService` covering:
+  - Creating reviews (with duplicate check)
+  - Calculating average ratings
+  - Fetching latest comments
+  - Error handling scenarios
+
+- **Controller Tests**: Unit tests for `ReviewsController` covering:
+  - HTTP endpoint handlers
+  - Request validation
+  - Response formatting
+  - Configuration handling
+
 ## 🌐 API Endpoints
 
 - Reviews Service: http://localhost:3000

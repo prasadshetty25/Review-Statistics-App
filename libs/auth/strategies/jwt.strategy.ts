@@ -6,7 +6,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 export interface JwtPayload {
-  sub: string; // user id
+  sub: string; // JWT spec requires string, but represents user id (number)
   username: string;
   email?: string;
   permissions: string[];
@@ -33,9 +33,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     try {
+      // Convert string sub to number for database query
+      const userId = parseInt(payload.sub, 10);
+      if (isNaN(userId)) {
+        throw new UnauthorizedException('Invalid user ID in token');
+      }
       const userFromDb = await this.dataSource.query(
         'SELECT id, username, email, permissions, last_login_at FROM users WHERE id = $1',
-        [payload.sub]
+        [userId]
       );
 
       if (!userFromDb || userFromDb.length === 0) {

@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, HttpCode, HttpStatus, Logger, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpCode, HttpStatus, Logger, Query, ParseIntPipe, UseGuards, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { AverageRatingResponseDto } from './dto/average-rating-response.dto';
 import { PermissionsGuard, Permissions, Public, CurrentUser } from '@reviews-monorepo/auth';
+import { User } from '@reviews-monorepo/database';
 
 @Controller()
 @UseGuards(PermissionsGuard) // Apply permissions check after JWT validation
@@ -25,7 +26,7 @@ export class ReviewsController {
   @HttpCode(HttpStatus.CREATED)
   @Permissions('reviews:create')
   async addComment(
-    @CurrentUser() user: any,
+    @CurrentUser() user: User,
     @Body() createReviewDto: CreateReviewDto
   ): Promise<ReviewResponseDto> {
     this.logger.log(`User ${user.username} creating review`);
@@ -44,7 +45,14 @@ export class ReviewsController {
   async getLatestComments(
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number
   ): Promise<ReviewResponseDto[]> {
-    const requestedLimit = limit || this.defaultCommentsLimit;
+    const requestedLimit = limit ?? this.defaultCommentsLimit;
+
+    // Validate limit is positive
+    if (requestedLimit < 1) {
+      throw new BadRequestException('Limit must be greater than 0');
+    }
+
+    // Cap limit at maximum allowed
     const safeLimit = Math.min(requestedLimit, this.maxCommentsLimit);
 
     if (requestedLimit > this.maxCommentsLimit) {
